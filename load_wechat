@@ -1,0 +1,17 @@
+/**
+ * 获取微信操作对象
+ * @staticvar array $wechat
+ * @param type $type
+ * @return WechatReceive
+ */
+function & load_wechat($type = '') {
+    static $wechat = array();
+    $index = md5(strtolower($type));
+    if (!isset($wechat[$index])) {
+        $result = Db::query("select token,encodingaeskey,appid,appsecret,mch_id,partnerkey,ssl_cer,ssl_key from os_config ");
+        $config = $result[0];
+        $config['cachepath'] = CACHE_PATH . 'Data/';
+        $wechat[$index] = & Loader::get($type, $config);
+    }
+    return $wechat[$index];
+}
